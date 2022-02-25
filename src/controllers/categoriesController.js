@@ -2,7 +2,6 @@ import connection from '../database.js';
 
 export async function listCategories(req, res) {
   const queryResult = await connection.query('SELECT * FROM categories');
-  console.log(queryResult.rows);
   res.send(queryResult.rows);
 }
 
@@ -13,7 +12,6 @@ export async function insertCategory(req, res) {
     'SELECT * FROM categories WHERE name=$1',
     [name]
   );
-  console.log(categoryExists.rows);
   if (categoryExists.rows.length !== 0) return res.sendStatus(409);
 
   try {
