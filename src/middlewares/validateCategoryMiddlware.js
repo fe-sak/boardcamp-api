@@ -1,9 +1,11 @@
 import categorySchema from '../schemas/categorySchema.js';
 
-export default function categoryValidation(req, res, next) {
+export default function validateCategory(req, res, next) {
   const validate = categorySchema.validate(req.body, {
     abortEarly: false,
   });
+
+  if (req.body.name === '') return res.sendStatus(400);
 
   if (validate.error) {
     res

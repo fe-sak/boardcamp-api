@@ -3,11 +3,11 @@ import {
   listCategories,
   insertCategory,
 } from '../controllers/categoriesController.js';
-import categoryValidation from '../middlewares/categoryValidationMiddlware.js';
+import validateCategory from '../middlewares/validateCategoryMiddlware.js';
 
 const categoriesRouter = Router();
 
 categoriesRouter.get('/categories', listCategories);
-categoriesRouter.post('/categories', categoryValidation, insertCategory);
+categoriesRouter.post('/categories', validateCategory, insertCategory);
 
 export default categoriesRouter;
