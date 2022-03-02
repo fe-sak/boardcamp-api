@@ -1,5 +1,29 @@
 import connection from '../database.js';
 
+export async function listGames(req, res) {
+  try {
+    if (req.query.name) {
+      const namePattern = `${req.query.name}%`;
+      const queryResult = await connection.query(
+        `SELECT games.*, categories.name AS "categoryName" FROM games 
+            JOIN  categories ON games."categoryId"=categories.id
+            WHERE LOWER(games.name) LIKE LOWER($1)`,
+        [namePattern]
+      );
+      res.send(queryResult.rows);
+    } else {
+      const queryResult = await connection.query(
+        `SELECT games.*, categories.name AS "categoryName" FROM games 
+            JOIN  categories ON games."categoryId"=categories.id`
+      );
+      res.send(queryResult.rows);
+    }
+  } catch (error) {
+    res.sendStatus(500);
+    console.log(error);
+  }
+}
+
 export default async function insertGame(req, res) {
   const { name, image, stockTotal, categoryId, pricePerDay } = req.body;
 
