@@ -26,13 +26,13 @@ export async function getCustomerById(req, res) {
     const queryResult = await connection.query(
       `SELECT * FROM customers
     WHERE  id=$1`,
-      [req.params.id]
+      [id]
     );
 
-    if (queryResult.rows.length === 0) return res.sendStatus(404);
-    else {
-      const customer = queryResult.rows[0];
+    const customer = queryResult.rows[0];
 
+    if (!customer) return res.sendStatus(404);
+    else {
       customer.birthday = dayjs(customer.birthday).format('YYYY-MM-DD');
 
       return res.send(customer);
@@ -52,8 +52,23 @@ export async function postCustomer(req, res) {
       [name, phone, cpf, birthday]
     );
     return res.sendStatus(201);
-  } catch (error) {
-    console.log(error);
+  } catch {
+    res.sendStatus(500);
+  }
+}
+
+export async function putCustomer(req, res) {
+  const { name, phone, cpf, birthday } = req.body;
+  const { id } = req.params;
+
+  try {
+    await connection.query(
+      `UPDATE customers SET name=$1, phone=$2, cpf=$3, birthday=$4 WHERE id=$5;`,
+      [name, phone, cpf, birthday, id]
+    );
+
+    return res.sendStatus(200);
+  } catch {
     res.sendStatus(500);
   }
 }
