@@ -10,6 +10,7 @@ import categorySchema from '../schemas/categorySchema.js';
 const categoriesRouter = Router();
 
 categoriesRouter.get('/categories', getCategories);
+
 categoriesRouter.post(
   '/categories',
   validateSchema(categorySchema),
