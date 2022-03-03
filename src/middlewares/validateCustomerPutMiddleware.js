@@ -1,4 +1,6 @@
-export default async function validatePutCustomer(req, res, next) {
+import connection from '../database.js';
+
+export default async function validateCustomerPut(req, res, next) {
   const { cpf } = req.body;
   const { id } = req.params;
 
@@ -25,7 +27,7 @@ export default async function validatePutCustomer(req, res, next) {
       if (cpfExists) return res.sendStatus(409);
     }
   } catch {
-    res.sendStatus(500);
+    return res.sendStatus(500);
   }
   next();
 }

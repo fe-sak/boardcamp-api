@@ -6,7 +6,7 @@ import {
   putCustomer,
 } from '../controllers/customersControllers.js';
 import validateCustomer from '../middlewares/validateCustomerMiddleware.js';
-import validatePutCustomer from '../middlewares/validatePutCustomerMiddleware.js';
+import validateCustomerPut from '../middlewares/validateCustomerPutMiddleware.js';
 import validateSchema from '../middlewares/validateSchemaMiddleware.js';
 import customerSchema from '../schemas/customerSchema.js';
 
@@ -25,7 +25,7 @@ customersRouter.post(
 customersRouter.put(
   '/customers/:id',
   validateSchema(customerSchema),
-  validatePutCustomer,
+  validateCustomerPut,
   putCustomer
 );
 
