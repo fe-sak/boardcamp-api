@@ -1,6 +1,6 @@
 import connection from '../database.js';
 
-export default async function validateCustomer(req, res, next) {
+export default async function validateCustomerPost(req, res, next) {
   const { cpf } = req.body;
   try {
     const customerExists = await connection.query(
