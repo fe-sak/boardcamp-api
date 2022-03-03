@@ -1,4 +1,5 @@
 import connection from '../database.js';
+import dayjs from 'dayjs';
 
 export async function getCustomers(req, res) {
   try {
@@ -13,6 +14,28 @@ export async function getCustomers(req, res) {
     } else {
       const queryResult = await connection.query(`SELECT * FROM customers`);
       res.send(queryResult.rows);
+    }
+  } catch {
+    res.sendStatus(500);
+  }
+}
+
+export async function getCustomerById(req, res) {
+  const { id } = req.params;
+  try {
+    const queryResult = await connection.query(
+      `SELECT * FROM customers
+    WHERE  id=$1`,
+      [req.params.id]
+    );
+
+    if (queryResult.rows.length === 0) return res.sendStatus(404);
+    else {
+      const customer = queryResult.rows[0];
+
+      customer.birthday = dayjs(customer.birthday).format('YYYY-MM-DD');
+
+      return res.send(queryResult.rows[0]);
     }
   } catch {
     res.sendStatus(500);
