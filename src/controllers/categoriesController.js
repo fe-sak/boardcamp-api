@@ -1,20 +1,14 @@
 import connection from '../database.js';
 
-export async function listCategories(req, res) {
+export async function getCategories(req, res) {
   const queryResult = await connection.query('SELECT * FROM categories');
   res.send(queryResult.rows);
 }
 
-export async function insertCategory(req, res) {
+export async function postCategory(req, res) {
   const { name } = req.body;
 
   try {
-    const categoryExists = await connection.query(
-      'SELECT * FROM categories WHERE name=$1',
-      [name]
-    );
-    if (categoryExists.rows.length !== 0) return res.sendStatus(409);
-
     await connection.query('INSERT INTO categories (name) VALUES ($1)', [name]);
     res.sendStatus(201);
   } catch {

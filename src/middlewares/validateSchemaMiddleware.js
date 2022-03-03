@@ -1,5 +1,5 @@
-export default async function createValidationFunction(req, res, next, schema) {
-  function validationFunction() {
+export default function validateSchema(schema) {
+  return (req, res, next) => {
     const validate = schema.validate(req.body, { abortEarly: false });
 
     if (validate.error) {
@@ -8,6 +8,5 @@ export default async function createValidationFunction(req, res, next, schema) {
         .send(validate.error.details.map((detail) => detail.message));
     }
     next();
-  }
-  return validationFunction();
+  };
 }
