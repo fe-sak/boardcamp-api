@@ -1,0 +1,17 @@
+INSERT INTO categories (name) VALUES ('Abstract');
+INSERT INTO categories (name) VALUES ('Area control');
+INSERT INTO categories (name) VALUES ('Campaign/legacy');
+INSERT INTO categories (name) VALUES ('Deckbuilder');
+INSERT INTO categories (name) VALUES ('Deck construction');
+INSERT INTO categories (name) VALUES ('Dexterity');
+INSERT INTO categories (name) VALUES ('Drafting');
+INSERT INTO categories (name) VALUES ('Dungeon-crawler');
+INSERT INTO categories (name) VALUES ('Engine-builder');
+INSERT INTO categories (name) VALUES ('Eurogame');
+INSERT INTO categories (name) VALUES ('Push-your-luck');
+INSERT INTO categories (name) VALUES ('Roll-and-move');
+INSERT INTO categories (name) VALUES ('Roll-and-write');
+INSERT INTO categories (name) VALUES ('Social deduction');
+INSERT INTO categories (name) VALUES ('Storytelling');
+INSERT INTO categories (name) VALUES ('Worker-placement');
+INSERT INTO categories (name) VALUES ('Wargame');
