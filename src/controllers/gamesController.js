@@ -18,9 +18,8 @@ export async function getGames(req, res) {
       );
       res.send(queryResult.rows);
     }
-  } catch (error) {
+  } catch {
     res.sendStatus(500);
-    console.log(error);
   }
 }
 
@@ -34,8 +33,7 @@ export async function postGame(req, res) {
       [name, image, parsedStockTotal, categoryId, parsedPricePerDay]
     );
     return res.sendStatus(201);
-  } catch (error) {
-    console.log(error);
+  } catch {
     return res.sendStatus(500);
   }
 }
