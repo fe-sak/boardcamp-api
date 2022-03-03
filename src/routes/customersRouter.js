@@ -3,8 +3,10 @@ import {
   getCustomerById,
   getCustomers,
   postCustomer,
+  putCustomer,
 } from '../controllers/customersControllers.js';
 import validateCustomer from '../middlewares/validateCustomerMiddleware.js';
+import validatePutCustomer from '../middlewares/validatePutCustomerMiddleware.js';
 import validateSchema from '../middlewares/validateSchemaMiddleware.js';
 import customerSchema from '../schemas/customerSchema.js';
 
@@ -18,6 +20,13 @@ customersRouter.post(
   validateSchema(customerSchema),
   validateCustomer,
   postCustomer
+);
+
+customersRouter.put(
+  '/customers/:id',
+  validateSchema(customerSchema),
+  validatePutCustomer,
+  putCustomer
 );
 
 export default customersRouter;
