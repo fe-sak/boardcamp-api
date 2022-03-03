@@ -35,7 +35,7 @@ export async function getCustomerById(req, res) {
 
       customer.birthday = dayjs(customer.birthday).format('YYYY-MM-DD');
 
-      return res.send(queryResult.rows[0]);
+      return res.send(customer);
     }
   } catch {
     res.sendStatus(500);
