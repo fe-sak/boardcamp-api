@@ -1,5 +1,6 @@
 import connection from '../database.js';
 import dayjs from 'dayjs';
+import dayjsFormat from '../Utils/dayjsFormat.js';
 
 export async function readCustomers(req, res) {
   try {
@@ -33,7 +34,7 @@ export async function readCustomerById(req, res) {
 
     if (!customer) return res.sendStatus(404);
     else {
-      customer.birthday = dayjs(customer.birthday).format('YYYY-MM-DD');
+      customer.birthday = dayjs(customer.birthday).format(dayjsFormat);
 
       return res.send(customer);
     }
