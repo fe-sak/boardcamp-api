@@ -1,7 +1,7 @@
 import connection from '../database.js';
 import dayjs from 'dayjs';
 
-export async function getCustomers(req, res) {
+export async function readCustomers(req, res) {
   try {
     if (req.query.cpf) {
       const cpfPattern = `${req.query.cpf}%`;
@@ -20,7 +20,7 @@ export async function getCustomers(req, res) {
   }
 }
 
-export async function getCustomerById(req, res) {
+export async function readCustomerById(req, res) {
   const { id } = req.params;
   try {
     const queryResult = await connection.query(
@@ -42,7 +42,7 @@ export async function getCustomerById(req, res) {
   }
 }
 
-export async function postCustomer(req, res) {
+export async function createCustomer(req, res) {
   const { name, phone, cpf, birthday } = req.body;
 
   try {
@@ -57,7 +57,7 @@ export async function postCustomer(req, res) {
   }
 }
 
-export async function putCustomer(req, res) {
+export async function updateCustomer(req, res) {
   const { name, phone, cpf, birthday } = req.body;
   const { id } = req.params;
 

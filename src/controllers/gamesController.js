@@ -1,6 +1,6 @@
 import connection from '../database.js';
 
-export async function getGames(req, res) {
+export async function readGames(req, res) {
   try {
     if (req.query.name) {
       const namePattern = `${req.query.name}%`;
@@ -23,7 +23,7 @@ export async function getGames(req, res) {
   }
 }
 
-export async function postGame(req, res) {
+export async function createGame(req, res) {
   const { name, image, stockTotal, categoryId, pricePerDay } = req.body;
   try {
     await connection.query(

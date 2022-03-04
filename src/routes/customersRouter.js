@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import {
-  getCustomerById,
-  getCustomers,
-  postCustomer,
-  putCustomer,
+  readCustomerById,
+  readCustomers,
+  createCustomer,
+  updateCustomer,
 } from '../controllers/customersControllers.js';
 import validateCustomerPost from '../middlewares/validateCustomerPostMiddleware.js';
 import validateCustomerPut from '../middlewares/validateCustomerPutMiddleware.js';
@@ -12,21 +12,21 @@ import customerSchema from '../schemas/customerSchema.js';
 
 const customersRouter = Router();
 
-customersRouter.get('/customers', getCustomers);
-customersRouter.get('/customers/:id', getCustomerById);
+customersRouter.get('/customers', readCustomers);
+customersRouter.get('/customers/:id', readCustomerById);
 
 customersRouter.post(
   '/customers',
   validateSchema(customerSchema),
   validateCustomerPost,
-  postCustomer
+  createCustomer
 );
 
 customersRouter.put(
   '/customers/:id',
   validateSchema(customerSchema),
   validateCustomerPut,
-  putCustomer
+  updateCustomer
 );
 
 export default customersRouter;

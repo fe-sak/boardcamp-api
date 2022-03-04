@@ -1,11 +1,11 @@
 import connection from '../database.js';
 
-export async function getCategories(req, res) {
+export async function readCategories(req, res) {
   const queryResult = await connection.query('SELECT * FROM categories');
   res.send(queryResult.rows);
 }
 
-export async function postCategory(req, res) {
+export async function createCategory(req, res) {
   const { name } = req.body;
 
   try {
