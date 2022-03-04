@@ -3,11 +3,14 @@ import connection from '../database.js';
 export default async function validateCategory(req, res, next) {
   const { name } = req.body;
   try {
-    const categoryExists = await connection.query(
+    const queryResult = await connection.query(
       'SELECT * FROM categories WHERE name=$1',
       [name]
     );
-    if (categoryExists.rows.length !== 0) return res.sendStatus(409);
+
+    const category = queryResult.rows[0];
+
+    if (category) return res.sendStatus(409);
   } catch {
     return res.sendStatus(500);
   }
