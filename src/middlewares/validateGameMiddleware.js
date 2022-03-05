@@ -21,7 +21,7 @@ export default async function validateGame(req, res, next) {
 
     const category = queryResultCategory.rows[0];
 
-    if (!category) return res.status(400).send("Category Id doesn't exist.");
+    if (!category) return res.status(400).send('Id de categoria não existe.');
   } catch {
     return res.sendStatus(500);
   }

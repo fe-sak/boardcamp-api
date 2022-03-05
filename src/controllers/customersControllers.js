@@ -32,7 +32,7 @@ export async function readCustomerById(req, res) {
 
     const customer = queryResult.rows[0];
 
-    if (!customer) return res.status(400).send(`Customer Id doesn't exist.`);
+    if (!customer) return res.status(400).send('Id de cliente não existe.');
     else {
       customer.birthday = dayjs(customer.birthday).format(dayjsFormat);
 

@@ -13,7 +13,7 @@ export default async function validateCustomerPut(req, res, next) {
 
     const customer = queryResult.rows[0];
 
-    if (!customer) return res.status(400).send(`Customer Id doesn't exist.`);
+    if (!customer) return res.status(400).send('Id de cliente não existe.');
 
     if (customer.cpf !== cpf) {
       const queryResultCpf = await connection.query(
