@@ -1,8 +1,6 @@
-import gameSchema from '../schemas/gameSchema.js';
-import validateSchema from './validateSchemaMiddleware.js';
 import connection from '../database.js';
 
-export default async function validateGame(req, res, next) {
+export default async function validateGameCreate(req, res, next) {
   const { name, categoryId } = req.body;
   try {
     const queryResultGame = await connection.query(

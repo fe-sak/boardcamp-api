@@ -88,3 +88,13 @@ export async function createRental(req, res) {
     return res.sendStatus(500);
   }
 }
+
+export async function updateRental(req, res) {
+  const { id } = req.params;
+
+  try {
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+}

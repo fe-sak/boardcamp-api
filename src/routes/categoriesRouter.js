@@ -3,7 +3,7 @@ import {
   readCategories,
   createCategory,
 } from '../controllers/categoriesController.js';
-import validateCategory from '../middlewares/validateCategoryMiddlware.js';
+import validateCategoryCreate from '../middlewares/validateCategoryMiddlware.js';
 import validateSchema from '../middlewares/validateSchemaMiddleware.js';
 import categorySchema from '../schemas/categorySchema.js';
 
@@ -14,7 +14,7 @@ categoriesRouter.get('/categories', readCategories);
 categoriesRouter.post(
   '/categories',
   validateSchema(categorySchema),
-  validateCategory,
+  validateCategoryCreate,
   createCategory
 );
 

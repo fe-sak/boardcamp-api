@@ -5,8 +5,10 @@ import {
   createCustomer,
   updateCustomer,
 } from '../controllers/customersControllers.js';
-import validateCustomerPost from '../middlewares/validateCustomerPostMiddleware.js';
-import validateCustomerPut from '../middlewares/validateCustomerPutMiddleware.js';
+import {
+  validateCustomerCreate,
+  validateCustomerUpdate,
+} from '../middlewares/validateCustomerMiddlewares.js';
 import validateSchema from '../middlewares/validateSchemaMiddleware.js';
 import customerSchema from '../schemas/customerSchema.js';
 
@@ -18,14 +20,14 @@ customersRouter.get('/customers/:id', readCustomerById);
 customersRouter.post(
   '/customers',
   validateSchema(customerSchema),
-  validateCustomerPost,
+  validateCustomerCreate,
   createCustomer
 );
 
 customersRouter.put(
   '/customers/:id',
   validateSchema(customerSchema),
-  validateCustomerPut,
+  validateCustomerUpdate,
   updateCustomer
 );
 
