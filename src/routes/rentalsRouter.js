@@ -4,7 +4,6 @@ import {
   readRentals,
   returnRental,
 } from '../controllers/rentalsController.js';
-import { validateCustomerById } from '../middlewares/validateCustomerMiddlewares.js';
 import {
   validateRentalCreate,
   validateRentalRead,
