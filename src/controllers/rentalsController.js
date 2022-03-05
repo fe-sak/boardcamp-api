@@ -2,7 +2,51 @@ import dayjs from 'dayjs';
 import connection from '../database.js';
 import dayjsFormat from '../Utils/dayjsFormat.js';
 
-export default async function createRental(req, res) {
+export async function readRentals(req, res) {
+  const rentalsQuery = await connection.query(`
+  SELECT 
+    rentals.*,
+    customers.name AS "customerName",
+    games.name AS "gameName",
+    categories.id AS "categoryId",
+    categories.name AS "categoryName"
+  FROM rentals 
+    JOIN customers ON rentals."customerId"=customers.id
+    JOIN games ON rentals."gameId"=games.id
+    JOIN categories ON games."categoryId"=categories.id`);
+
+  const rentals = rentalsQuery.rows;
+
+  const parsedRentals = rentals.map((rental) => {
+    const {
+      customerId,
+      customerName,
+      gameId,
+      gameName,
+      categoryId,
+      categoryName,
+      ...rest
+    } = rental;
+
+    return {
+      ...rest,
+      customer: {
+        id: customerId,
+        name: customerName,
+      },
+      game: {
+        id: gameId,
+        name: gameName,
+        categoryId,
+        categoryName,
+      },
+    };
+  });
+
+  res.send(parsedRentals);
+}
+
+export async function createRental(req, res) {
   let rental = req.body;
 
   try {
