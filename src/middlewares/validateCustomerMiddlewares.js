@@ -18,7 +18,7 @@ export async function validateCreateCustomer(req, res, next) {
   next();
 }
 
-export async function validateReadCustomerById(req, res, next) {
+export async function validateCustomerId(req, res, next) {
   const { id } = req.params;
   const queryResult = await connection.query(
     `SELECT * FROM customers
