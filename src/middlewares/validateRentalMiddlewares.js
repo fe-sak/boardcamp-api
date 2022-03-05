@@ -73,7 +73,7 @@ export async function validateCreateRental(req, res, next) {
   next();
 }
 
-export async function validateReturnRental(req, res, next) {
+export async function validateRentalId(req, res, next) {
   const { id } = req.params;
 
   try {
@@ -83,7 +83,15 @@ export async function validateReturnRental(req, res, next) {
     );
     const rentalExists = rentalExistsQuery.rows[0];
     if (!rentalExists) return res.status(404).send('Id de aluguel não existe.');
+  } catch {
+    return res.sendStatus(500);
+  }
+}
 
+export async function validateReturnRental(req, res, next) {
+  const { id } = req.params;
+
+  try {
     const isRentalFinishedQuery = await connection.query(
       `SELECT * FROM rentals WHERE id=$1 AND NOT "returnDate" IS NULL`,
       [id]

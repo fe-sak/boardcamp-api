@@ -7,6 +7,7 @@ import {
 import {
   validateCreateRental,
   validateReadRentals,
+  validateRentalId,
   validateReturnRental,
 } from '../middlewares/validateRentalMiddlewares.js';
 import validateSchema from '../middlewares/validateSchemaMiddleware.js';
@@ -22,6 +23,11 @@ rentalsRouter.post(
   validateCreateRental,
   createRental
 );
-rentalsRouter.post('/rentals/:id/return', validateReturnRental, returnRental);
+rentalsRouter.post(
+  '/rentals/:id/return',
+  validateRentalId,
+  validateReturnRental,
+  returnRental
+);
 
 export default rentalsRouter;
