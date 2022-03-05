@@ -1,6 +1,6 @@
 import connection from '../database.js';
 
-export default async function validateCategoryCreate(req, res, next) {
+export default async function validateCreateCategory(req, res, next) {
   const { name } = req.body;
   try {
     const queryResult = await connection.query(

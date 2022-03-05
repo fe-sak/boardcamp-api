@@ -5,23 +5,23 @@ import {
   returnRental,
 } from '../controllers/rentalsController.js';
 import {
-  validateRentalCreate,
-  validateRentalRead,
-  validateRentalReturn,
+  validateCreateRental,
+  validateReadRentals,
+  validateReturnRental,
 } from '../middlewares/validateRentalMiddlewares.js';
 import validateSchema from '../middlewares/validateSchemaMiddleware.js';
 import rentalSchema from '../schemas/rentalSchema.js';
 
 const rentalsRouter = Router();
 
-rentalsRouter.get('/rentals', validateRentalRead, readRentals);
+rentalsRouter.get('/rentals', validateReadRentals, readRentals);
 
 rentalsRouter.post(
   '/rentals',
   validateSchema(rentalSchema),
-  validateRentalCreate,
+  validateCreateRental,
   createRental
 );
-rentalsRouter.post('/rentals/:id/return', validateRentalReturn, returnRental);
+rentalsRouter.post('/rentals/:id/return', validateReturnRental, returnRental);
 
 export default rentalsRouter;

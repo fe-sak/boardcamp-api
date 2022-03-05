@@ -1,6 +1,6 @@
 import connection from '../database.js';
 
-export async function validateRentalRead(req, res, next) {
+export async function validateReadRentals(req, res, next) {
   const { customerId, gameId } = req.query;
   try {
     if (customerId) {
@@ -31,7 +31,7 @@ export async function validateRentalRead(req, res, next) {
   next();
 }
 
-export async function validateRentalCreate(req, res, next) {
+export async function validateCreateRental(req, res, next) {
   const { customerId, gameId, daysRented } = req.body;
   try {
     const customerIdQuery = await connection.query(
@@ -73,7 +73,7 @@ export async function validateRentalCreate(req, res, next) {
   next();
 }
 
-export async function validateRentalReturn(req, res, next) {
+export async function validateReturnRental(req, res, next) {
   const { id } = req.params;
 
   try {

@@ -1,6 +1,6 @@
 import connection from '../database.js';
 
-export async function validateCustomerCreate(req, res, next) {
+export async function validateCreateCustomer(req, res, next) {
   const { cpf } = req.body;
   try {
     const queryResult = await connection.query(
@@ -18,7 +18,7 @@ export async function validateCustomerCreate(req, res, next) {
   next();
 }
 
-export async function validateCustomerById(req, res, next) {
+export async function validateReadCustomerById(req, res, next) {
   const { id } = req.params;
   const queryResult = await connection.query(
     `SELECT * FROM customers
@@ -32,7 +32,7 @@ export async function validateCustomerById(req, res, next) {
   next();
 }
 
-export async function validateCustomerUpdate(req, res, next) {
+export async function validateUpdateCustomer(req, res, next) {
   const { cpf } = req.body;
   const { id } = req.params;
 

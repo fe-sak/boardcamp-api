@@ -6,9 +6,9 @@ import {
   updateCustomer,
 } from '../controllers/customersControllers.js';
 import {
-  validateCustomerCreate,
-  validateCustomerById,
-  validateCustomerUpdate,
+  validateCreateCustomer,
+  validateReadCustomerById,
+  validateUpdateCustomer,
 } from '../middlewares/validateCustomerMiddlewares.js';
 import validateSchema from '../middlewares/validateSchemaMiddleware.js';
 import customerSchema from '../schemas/customerSchema.js';
@@ -16,19 +16,23 @@ import customerSchema from '../schemas/customerSchema.js';
 const customersRouter = Router();
 
 customersRouter.get('/customers', readCustomers);
-customersRouter.get('/customers/:id', validateCustomerById, readCustomerById);
+customersRouter.get(
+  '/customers/:id',
+  validateReadCustomerById,
+  readCustomerById
+);
 
 customersRouter.post(
   '/customers',
   validateSchema(customerSchema),
-  validateCustomerCreate,
+  validateCreateCustomer,
   createCustomer
 );
 
 customersRouter.put(
   '/customers/:id',
   validateSchema(customerSchema),
-  validateCustomerUpdate,
+  validateUpdateCustomer,
   updateCustomer
 );
 
