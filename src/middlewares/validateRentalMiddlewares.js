@@ -86,17 +86,18 @@ export async function validateRentalId(req, res, next) {
   } catch {
     return res.sendStatus(500);
   }
+  next();
 }
 
-export async function validateReturnRental(req, res, next) {
+export async function validateRentalFinished(req, res, next) {
   const { id } = req.params;
 
   try {
-    const isRentalFinishedQuery = await connection.query(
+    const queryResult = await connection.query(
       `SELECT * FROM rentals WHERE id=$1 AND NOT "returnDate" IS NULL`,
       [id]
     );
-    const isRentalFinished = isRentalFinishedQuery.rows[0];
+    const isRentalFinished = queryResult.rows[0];
     if (isRentalFinished) return res.status(400).send('Aluguel já finalizado.');
   } catch {
     return res.sendStatus(500);

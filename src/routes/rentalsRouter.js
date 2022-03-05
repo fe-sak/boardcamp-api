@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   createRental,
+  deleteRental,
   readRentals,
   returnRental,
 } from '../controllers/rentalsController.js';
@@ -8,7 +9,7 @@ import {
   validateCreateRental,
   validateReadRentals,
   validateRentalId,
-  validateReturnRental,
+  validateRentalFinished,
 } from '../middlewares/validateRentalMiddlewares.js';
 import validateSchema from '../middlewares/validateSchemaMiddleware.js';
 import rentalSchema from '../schemas/rentalSchema.js';
@@ -26,8 +27,15 @@ rentalsRouter.post(
 rentalsRouter.post(
   '/rentals/:id/return',
   validateRentalId,
-  validateReturnRental,
+  validateRentalFinished,
   returnRental
+);
+
+rentalsRouter.delete(
+  '/rentals/:id',
+  validateRentalId,
+  validateRentalFinished,
+  deleteRental
 );
 
 export default rentalsRouter;
