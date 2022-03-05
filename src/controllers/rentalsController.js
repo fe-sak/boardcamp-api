@@ -3,6 +3,16 @@ import connection from '../database.js';
 import dayjsFormat from '../Utils/dayjsFormat.js';
 
 export async function readRentals(req, res) {
+  const { customerId, gameId } = req.query;
+
+  let query = '';
+  if (customerId) {
+    query = `WHERE rentals."customerId"=${customerId}`;
+  }
+
+  if (gameId) {
+    query = `WHERE rentals."gameId"=${gameId}`;
+  }
   const rentalsQuery = await connection.query(`
   SELECT 
     rentals.*,
@@ -13,7 +23,8 @@ export async function readRentals(req, res) {
   FROM rentals 
     JOIN customers ON rentals."customerId"=customers.id
     JOIN games ON rentals."gameId"=games.id
-    JOIN categories ON games."categoryId"=categories.id`);
+    JOIN categories ON games."categoryId"=categories.id
+    ${query}`);
 
   const rentals = rentalsQuery.rows;
 

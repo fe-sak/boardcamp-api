@@ -1,6 +1,6 @@
 import connection from '../database.js';
 
-export default async function validateRental(req, res, next) {
+export default async function validateRentalPost(req, res, next) {
   const { customerId, gameId, daysRented } = req.body;
   try {
     const customerIdQuery = await connection.query(
