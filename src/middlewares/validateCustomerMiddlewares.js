@@ -18,6 +18,20 @@ export async function validateCustomerCreate(req, res, next) {
   next();
 }
 
+export async function validateCustomerById(req, res, next) {
+  const { id } = req.params;
+  const queryResult = await connection.query(
+    `SELECT * FROM customers
+  WHERE  id=$1`,
+    [id]
+  );
+
+  const customer = queryResult.rows[0];
+
+  if (!customer) return res.status(400).send('Id de cliente não existe.');
+  next();
+}
+
 export async function validateCustomerUpdate(req, res, next) {
   const { cpf } = req.body;
   const { id } = req.params;

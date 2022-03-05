@@ -7,6 +7,7 @@ import {
 } from '../controllers/customersControllers.js';
 import {
   validateCustomerCreate,
+  validateCustomerById,
   validateCustomerUpdate,
 } from '../middlewares/validateCustomerMiddlewares.js';
 import validateSchema from '../middlewares/validateSchemaMiddleware.js';
@@ -15,7 +16,7 @@ import customerSchema from '../schemas/customerSchema.js';
 const customersRouter = Router();
 
 customersRouter.get('/customers', readCustomers);
-customersRouter.get('/customers/:id', readCustomerById);
+customersRouter.get('/customers/:id', validateCustomerById, readCustomerById);
 
 customersRouter.post(
   '/customers',

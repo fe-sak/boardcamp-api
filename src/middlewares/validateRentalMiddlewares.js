@@ -61,7 +61,6 @@ export async function validateRentalCreate(req, res, next) {
       `SELECT * FROM rentals WHERE "gameId"=$1 AND "returnDate" IS NULL`,
       [gameId]
     );
-    console.log(rentedGamesQuery.rows);
 
     let rentedGames = 0;
     rentedGamesQuery.rows.forEach(() => rentedGames++);
@@ -74,6 +73,25 @@ export async function validateRentalCreate(req, res, next) {
   next();
 }
 
-export async function validateRentalUpdate(req, res, next) {
+export async function validateRentalReturn(req, res, next) {
+  const { id } = req.params;
+
+  try {
+    const rentalExistsQuery = await connection.query(
+      `SELECT * FROM rentals WHERE id=$1`,
+      [id]
+    );
+    const rentalExists = rentalExistsQuery.rows[0];
+    if (!rentalExists) return res.status(404).send('Id de aluguel não existe.');
+
+    const isRentalFinishedQuery = await connection.query(
+      `SELECT * FROM rentals WHERE id=$1 AND NOT "returnDate" IS NULL`,
+      [id]
+    );
+    const isRentalFinished = isRentalFinishedQuery.rows[0];
+    if (isRentalFinished) return res.status(400).send('Aluguel já finalizado.');
+  } catch {
+    return res.sendStatus(500);
+  }
   next();
 }
