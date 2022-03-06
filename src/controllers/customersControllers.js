@@ -3,17 +3,20 @@ import dayjs from 'dayjs';
 import dayjsFormat from '../Utils/dayjsFormat.js';
 
 export async function readCustomers(req, res) {
+  const sqlQueryOptions = res.locals.sqlQueryOptions;
   try {
     if (req.query.cpf) {
       const cpfPattern = `${req.query.cpf}%`;
       const queryResult = await connection.query(
         `SELECT * FROM customers 
-            WHERE cpf LIKE $1`,
+            WHERE cpf LIKE $1 ${sqlQueryOptions}`,
         [cpfPattern]
       );
       res.send(queryResult.rows);
     } else {
-      const queryResult = await connection.query(`SELECT * FROM customers`);
+      const queryResult = await connection.query(
+        `SELECT * FROM customers ${sqlQueryOptions}`
+      );
       res.send(queryResult.rows);
     }
   } catch {

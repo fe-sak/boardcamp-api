@@ -1,20 +1,21 @@
 import connection from '../database.js';
 
 export async function readGames(req, res) {
+  const sqlQueryOptions = res.locals.sqlQueryOptions;
   try {
     if (req.query.name) {
       const namePattern = `${req.query.name}%`;
       const queryResult = await connection.query(
         `SELECT games.*, categories.name AS "categoryName" FROM games 
             JOIN  categories ON games."categoryId"=categories.id
-            WHERE LOWER(games.name) LIKE LOWER($1)`,
+            WHERE LOWER(games.name) LIKE LOWER($1) ${sqlQueryOptions}`,
         [namePattern]
       );
       res.send(queryResult.rows);
     } else {
       const queryResult = await connection.query(
         `SELECT games.*, categories.name AS "categoryName" FROM games 
-            JOIN  categories ON games."categoryId"=categories.id`
+            JOIN  categories ON games."categoryId"=categories.id ${sqlQueryOptions}`
       );
       res.send(queryResult.rows);
     }

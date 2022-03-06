@@ -1,7 +1,10 @@
 import connection from '../database.js';
 
 export async function readCategories(req, res) {
-  const queryResult = await connection.query('SELECT * FROM categories');
+  const sqlQueryOptions = res.locals.sqlQueryOptions;
+  const queryResult = await connection.query(
+    `SELECT * FROM categories ${sqlQueryOptions}`
+  );
   res.send(queryResult.rows);
 }
 

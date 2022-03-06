@@ -12,11 +12,13 @@ import {
   validateRentalFinished,
 } from '../middlewares/validateRentalMiddlewares.js';
 import validateSchema from '../middlewares/validateSchemaMiddleware.js';
+import verifyUrlQuery from '../middlewares/verifyUrlQueryMiddleware.js';
+
 import rentalSchema from '../schemas/rentalSchema.js';
 
 const rentalsRouter = Router();
 
-rentalsRouter.get('/rentals', validateReadRentals, readRentals);
+rentalsRouter.get('/rentals', validateReadRentals, verifyUrlQuery, readRentals);
 
 rentalsRouter.post(
   '/rentals',

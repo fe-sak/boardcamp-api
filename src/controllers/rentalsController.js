@@ -4,14 +4,15 @@ import dayjsFormat from '../Utils/dayjsFormat.js';
 
 export async function readRentals(req, res) {
   const { customerId, gameId } = req.query;
+  const sqlQueryOptions = res.locals.sqlQueryOptions;
 
-  let query = '';
+  let sqlQueryFilterById = '';
   if (customerId) {
-    query = `WHERE rentals."customerId"=${customerId}`;
+    sqlQueryFilterById = `WHERE rentals."customerId"=${customerId}`;
   }
 
   if (gameId) {
-    query = `WHERE rentals."gameId"=${gameId}`;
+    sqlQueryFilterById = `WHERE rentals."gameId"=${gameId}`;
   }
   const rentalsQuery = await connection.query(`
   SELECT 
@@ -24,7 +25,8 @@ export async function readRentals(req, res) {
     JOIN customers ON rentals."customerId"=customers.id
     JOIN games ON rentals."gameId"=games.id
     JOIN categories ON games."categoryId"=categories.id
-    ${query}`);
+    ${sqlQueryFilterById}
+    ${sqlQueryOptions}`);
 
   const rentals = rentalsQuery.rows;
 
