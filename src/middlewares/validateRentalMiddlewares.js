@@ -24,8 +24,7 @@ export async function validateReadRentals(req, res, next) {
 
       if (!game) return res.status(400).send('Id do jogo não existe.');
     }
-  } catch (error) {
-    console.log(error);
+  } catch {
     return res.sendStatus(500);
   }
   next();

@@ -1,6 +1,5 @@
 export default async function verifyUrlQuery(req, res, next) {
   const { offset, limit, order, desc } = req.query;
-  console.log(order);
   let sqlQueryString = '';
   if (offset) {
     sqlQueryString += `OFFSET ${offset} `;

@@ -85,8 +85,7 @@ export async function createRental(req, res) {
 
     await connection.query(queryString, rentalValues);
     return res.sendStatus(201);
-  } catch (error) {
-    console.log(error);
+  } catch {
     return res.sendStatus(500);
   }
 }
@@ -119,8 +118,7 @@ export async function returnRental(req, res) {
       [todayFormatted, delayFee, id]
     );
     return res.sendStatus(200);
-  } catch (error) {
-    console.log(error);
+  } catch {
     res.sendStatus(500);
   }
 }
@@ -131,8 +129,7 @@ export async function deleteRental(req, res) {
   try {
     await connection.query(`DELETE FROM rentals WHERE id=$1`, [id]);
     res.sendStatus(200);
-  } catch (error) {
-    console.log(error);
+  } catch {
     return res.sendStatus(500);
   }
 }
