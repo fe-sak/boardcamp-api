@@ -2,24 +2,28 @@ import connection from '../database.js';
 
 export async function readGames(req, res) {
   const sqlQueryOptions = res.locals.sqlQueryOptions;
+  const { name } = req.query;
   try {
-    if (req.query.name) {
-      const namePattern = `${req.query.name}%`;
-      const queryResult = await connection.query(
-        `SELECT games.*, categories.name AS "categoryName" FROM games 
-            JOIN  categories ON games."categoryId"=categories.id
-            WHERE LOWER(games.name) LIKE LOWER($1) ${sqlQueryOptions}`,
-        [namePattern]
-      );
-      res.send(queryResult.rows);
-    } else {
-      const queryResult = await connection.query(
-        `SELECT games.*, categories.name AS "categoryName" FROM games 
-            JOIN  categories ON games."categoryId"=categories.id ${sqlQueryOptions}`
-      );
-      res.send(queryResult.rows);
+    let filterByName = '';
+    if (name) {
+      const namePattern = `'${name}%'`;
+      filterByName = `WHERE LOWER(games.name) LIKE LOWER(${namePattern})`;
     }
-  } catch {
+    const queryResult = await connection.query(
+      `SELECT 
+          games.*, 
+          categories.name AS "categoryName",
+          COUNT(*) AS "rentalsCount"
+        FROM games 
+          JOIN  categories ON games."categoryId"=categories.id
+          JOIN rentals ON games.id=rentals."gameId"
+          ${filterByName}
+        GROUP BY
+          games.id, categories.name ${sqlQueryOptions}`
+    );
+    res.send(queryResult.rows);
+  } catch (error) {
+    console.log(error);
     res.sendStatus(500);
   }
 }
