@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   createRental,
   deleteRental,
+  readMetrics,
   readRentals,
   returnRental,
 } from '../controllers/rentalsController.js';
@@ -19,6 +20,7 @@ import rentalSchema from '../schemas/rentalSchema.js';
 const rentalsRouter = Router();
 
 rentalsRouter.get('/rentals', validateReadRentals, pagination, readRentals);
+rentalsRouter.get('/rentals/metrics', readMetrics);
 
 rentalsRouter.post(
   '/rentals',
