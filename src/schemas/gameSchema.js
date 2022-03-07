@@ -1,6 +1,6 @@
 import Joi from 'joi';
-import imageUriPattern from '../Utils/imageUriRegEx.js';
-import numericalStringRegEx from '../Utils/numericalString.js';
+import imageUriPattern from '../Utils/Regular Expressions/imageUriRegEx.js';
+import numericalStringRegEx from '../Utils/Regular Expressions/numericalStringRegEx.js';
 
 const gameSchema = Joi.object({
   name: Joi.string().required(),

@@ -10,7 +10,10 @@ export default async function validateCreateCategory(req, res, next) {
 
     const category = queryResult.rows[0];
 
-    if (category) return res.sendStatus(409);
+    if (category)
+      return res
+        .status(409)
+        .send(`A categoria "${name}" já existe no banco de dados.`);
   } catch {
     return res.sendStatus(500);
   }

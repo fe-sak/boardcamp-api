@@ -1,11 +1,10 @@
 import connection from '../database.js';
-import dayjs from 'dayjs';
-import dayjsFormat from '../Utils/dayjsFormat.js';
-import formatDate from '../Utils/formatDate.js';
+import formatDate from '../Utils/dayjs/formatDate.js';
 
 export async function readCustomers(req, res) {
   const sqlQueryOptions = res.locals.sqlQueryOptions;
   const { cpf } = req.query;
+
   try {
     let sqlQueryFilterByCpf = '';
     if (cpf) {
@@ -20,9 +19,9 @@ export async function readCustomers(req, res) {
         customers.phone,
         customers.cpf,
         customers.birthday,
-        COUNT(customers.id) AS "rentalsCount"
+        COUNT(rentals."customerId") AS "rentalsCount"
       FROM customers
-        JOIN rentals ON customers.id=rentals."customerId"  
+        LEFT JOIN rentals ON customers.id=rentals."customerId"  
       GROUP BY
         customers.id
       ${sqlQueryFilterByCpf} 
@@ -32,14 +31,14 @@ export async function readCustomers(req, res) {
     formatDate(customers, 'birthday');
 
     res.send(customers);
-  } catch (error) {
-    console.log(error);
+  } catch {
     res.sendStatus(500);
   }
 }
 
 export async function readCustomerById(req, res) {
   const { id } = req.params;
+
   try {
     const { rows: customer } = await connection.query(
       `SELECT
@@ -48,22 +47,18 @@ export async function readCustomerById(req, res) {
         customers.phone,
         customers.cpf,
         customers.birthday,
-        COUNT(customers.id) AS "rentalsCount"
+        COUNT(rentals."customerId") AS "rentalsCount"
       FROM customers
-        JOIN rentals ON customers.id=rentals."customerId"  
+        LEFT JOIN rentals ON customers.id=rentals."customerId"  
       WHERE  customers.id=$1
       GROUP BY
         customers.id`,
       [id]
     );
+    formatDate(customer, 'birthday');
 
-    if (!customer) return res.status(400).send('Id de cliente não existe.');
-    else {
-      formatDate(customer, 'birthday');
-      return res.send(customer[0]);
-    }
-  } catch (error) {
-    console.log(error);
+    return res.send(customer[0]);
+  } catch {
     res.sendStatus(500);
   }
 }
@@ -77,6 +72,7 @@ export async function createCustomer(req, res) {
     VALUES ($1, $2, $3, $4)`,
       [name, phone, cpf, birthday]
     );
+
     return res.sendStatus(201);
   } catch {
     res.sendStatus(500);
@@ -89,7 +85,14 @@ export async function updateCustomer(req, res) {
 
   try {
     await connection.query(
-      `UPDATE customers SET name=$1, phone=$2, cpf=$3, birthday=$4 WHERE id=$5;`,
+      `UPDATE 
+        customers 
+      SET 
+        name=$1, 
+        phone=$2, 
+        cpf=$3, 
+        birthday=$4 
+      WHERE id=$5;`,
       [name, phone, cpf, birthday, id]
     );
 

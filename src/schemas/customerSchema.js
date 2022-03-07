@@ -1,6 +1,6 @@
 import Joi from 'joi';
-import cpfRegEx from '../Utils/cpfRegEx.js';
-import phoneRegEx from '../Utils/phoneRegEx.js';
+import cpfRegEx from '../Utils/Regular Expressions/cpfRegEx.js';
+import phoneRegEx from '../Utils/Regular Expressions/phoneRegEx.js';
 
 const customerSchema = Joi.object({
   name: Joi.string().required(),
