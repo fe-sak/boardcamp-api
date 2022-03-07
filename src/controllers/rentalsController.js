@@ -30,8 +30,7 @@ export async function readRentals(req, res) {
     customers.name AS "customerName",
     games.name AS "gameName",
     categories.id AS "categoryId",
-    categories.name AS "categoryName",
-    COUNT(rentals."customerId") AS "rentalsCount"
+    categories.name AS "categoryName"
   FROM rentals 
     JOIN customers ON rentals."customerId"=customers.id
     JOIN games ON rentals."gameId"=games.id
@@ -39,13 +38,7 @@ export async function readRentals(req, res) {
     ${sqlQueryFilterById}
     ${sqlQueryFilterByStatus}
     ${sqlQueryFilterByDate}
-    ${sqlQueryOptions}
-  GROUP BY
-    rentals."customerId",
-    rentals.id,
-    customers.name,
-    games.name,
-    categories.id`);
+    ${sqlQueryOptions}`);
 
   const rentals = rentalsQuery.rows;
   console.log(rentals);
