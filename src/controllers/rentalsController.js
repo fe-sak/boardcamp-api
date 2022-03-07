@@ -16,50 +16,54 @@ export async function readRentals(req, res) {
     startDate
   );
 
-  const { rows: rentals } = await connection.query(`
-  SELECT 
-    rentals.*,
-    customers.name AS "customerName",
-    games.name AS "gameName",
-    categories.id AS "categoryId",
-    categories.name AS "categoryName"
-  FROM rentals 
-    JOIN customers ON rentals."customerId"=customers.id
-    JOIN games ON rentals."gameId"=games.id
-    JOIN categories ON games."categoryId"=categories.id
-    ${sqlQueryFilter}
-    ${sqlQueryOptions}`);
+  try {
+    const { rows: rentals } = await connection.query(`
+      SELECT 
+        rentals.*,
+        customers.name AS "customerName",
+        games.name AS "gameName",
+        categories.id AS "categoryId",
+        categories.name AS "categoryName"
+      FROM rentals 
+        JOIN customers ON rentals."customerId"=customers.id
+        JOIN games ON rentals."gameId"=games.id
+        JOIN categories ON games."categoryId"=categories.id
+        ${sqlQueryFilter}
+        ${sqlQueryOptions}`);
 
-  let parsedRentals = rentals.map((rental) => {
-    const {
-      customerId,
-      customerName,
-      gameId,
-      gameName,
-      categoryId,
-      categoryName,
-      ...rest
-    } = rental;
-
-    return {
-      ...rest,
-      customer: {
-        id: customerId,
-        name: customerName,
-      },
-      game: {
-        id: gameId,
-        name: gameName,
+    let parsedRentals = rentals.map((rental) => {
+      const {
+        customerId,
+        customerName,
+        gameId,
+        gameName,
         categoryId,
         categoryName,
-      },
-    };
-  });
+        ...rest
+      } = rental;
 
-  formatDate(parsedRentals, 'rentDate');
-  formatDate(parsedRentals, 'returnDate');
+      return {
+        ...rest,
+        customer: {
+          id: customerId,
+          name: customerName,
+        },
+        game: {
+          id: gameId,
+          name: gameName,
+          categoryId,
+          categoryName,
+        },
+      };
+    });
 
-  res.send(parsedRentals);
+    formatDate(parsedRentals, 'rentDate');
+    formatDate(parsedRentals, 'returnDate');
+
+    res.send(parsedRentals);
+  } catch {
+    res.sendStatus(500);
+  }
 }
 
 export async function readMetrics(req, res) {

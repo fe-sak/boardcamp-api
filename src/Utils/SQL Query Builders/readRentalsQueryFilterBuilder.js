@@ -23,11 +23,15 @@ export default function readRentalsQueryFilterBuilder(
   if (startDate) sqlQueryFilterByDate = `"rentDate">='${startDate}'`;
 
   let sqlQueryFilter = `
-    WHERE 
+    ${
+      sqlQueryFilterById || sqlQueryFilterByStatus || sqlQueryFilterByDate
+        ? 'WHERE'
+        : ''
+    } 
       ${sqlQueryFilterById} 
-      ${sqlQueryFilterById && sqlQueryFilterByStatus && 'AND'}
+      ${sqlQueryFilterById && sqlQueryFilterByStatus ? 'AND' : ''}
       ${sqlQueryFilterByStatus}
-      ${sqlQueryFilterByStatus && sqlQueryFilterByDate && 'AND'}
+      ${sqlQueryFilterByStatus && sqlQueryFilterByDate ? 'AND' : ''}
       ${
         sqlQueryFilterById && sqlQueryFilterByDate && !sqlQueryFilterByStatus
           ? 'AND'
