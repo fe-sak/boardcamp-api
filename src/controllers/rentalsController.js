@@ -3,16 +3,22 @@ import connection from '../database.js';
 import dayjsFormat from '../Utils/dayjsFormat.js';
 
 export async function readRentals(req, res) {
-  const { customerId, gameId } = req.query;
+  const { customerId, gameId, status, startDate } = req.query;
   const sqlQueryOptions = res.locals.sqlQueryOptions;
 
   let sqlQueryFilterById = '';
   if (customerId) {
     sqlQueryFilterById = `WHERE rentals."customerId"=${customerId}`;
   }
-
   if (gameId) {
     sqlQueryFilterById = `WHERE rentals."gameId"=${gameId}`;
+  }
+
+  let sqlQueryFilterByStatus = '';
+  if (status === 'open') {
+    sqlQueryFilterByStatus = `WHERE rentals."returnDate" IS NULL`;
+  } else if (status === 'closed') {
+    sqlQueryFilterByStatus = `WHERE NOT rentals."returnDate" IS NULL`;
   }
   const rentalsQuery = await connection.query(`
   SELECT 
@@ -25,12 +31,13 @@ export async function readRentals(req, res) {
     JOIN customers ON rentals."customerId"=customers.id
     JOIN games ON rentals."gameId"=games.id
     JOIN categories ON games."categoryId"=categories.id
+    ${sqlQueryFilterByStatus}
     ${sqlQueryFilterById}
     ${sqlQueryOptions}`);
 
   const rentals = rentalsQuery.rows;
 
-  const parsedRentals = rentals.map((rental) => {
+  let parsedRentals = rentals.map((rental) => {
     const {
       customerId,
       customerName,
@@ -55,6 +62,15 @@ export async function readRentals(req, res) {
       },
     };
   });
+
+  if (startDate) {
+    parsedRentals = parsedRentals.filter((rental) => {
+      const startDateDayjs = dayjs(startDate);
+      const rentDateDayjs = dayjs(rental.rentDate);
+      const difference = rentDateDayjs.diff(startDateDayjs, 'days');
+      if (difference >= 0) return true;
+    });
+  }
 
   res.send(parsedRentals);
 }

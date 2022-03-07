@@ -1,4 +1,4 @@
-export default async function verifyUrlQuery(req, res, next) {
+export default async function pagination(req, res, next) {
   const { offset, limit, order, desc } = req.query;
   let sqlQueryString = '';
   if (offset) {
