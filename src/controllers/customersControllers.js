@@ -1,25 +1,39 @@
 import connection from '../database.js';
 import dayjs from 'dayjs';
 import dayjsFormat from '../Utils/dayjsFormat.js';
+import formatDate from '../Utils/formatDate.js';
 
 export async function readCustomers(req, res) {
   const sqlQueryOptions = res.locals.sqlQueryOptions;
+  const { cpf } = req.query;
   try {
-    if (req.query.cpf) {
-      const cpfPattern = `${req.query.cpf}%`;
-      const queryResult = await connection.query(
-        `SELECT * FROM customers 
-            WHERE cpf LIKE $1 ${sqlQueryOptions}`,
-        [cpfPattern]
-      );
-      res.send(queryResult.rows);
-    } else {
-      const queryResult = await connection.query(
-        `SELECT * FROM customers ${sqlQueryOptions}`
-      );
-      res.send(queryResult.rows);
+    let sqlQueryFilterByCpf = '';
+    if (cpf) {
+      const cpfPattern = `'${cpf}%'`;
+      sqlQueryFilterByCpf = `WHERE cpf LIKE ${cpfPattern}`;
     }
-  } catch {
+
+    const { rows: customers } = await connection.query(
+      `SELECT
+        customers.id,
+        customers.name,
+        customers.phone,
+        customers.cpf,
+        customers.birthday,
+        COUNT(customers.id) AS "rentalsCount"
+      FROM customers
+        JOIN rentals ON customers.id=rentals."customerId"  
+      GROUP BY
+        customers.id
+      ${sqlQueryFilterByCpf} 
+      ${sqlQueryOptions}`
+    );
+
+    formatDate(customers, 'birthday');
+
+    res.send(customers);
+  } catch (error) {
+    console.log(error);
     res.sendStatus(500);
   }
 }
@@ -27,21 +41,29 @@ export async function readCustomers(req, res) {
 export async function readCustomerById(req, res) {
   const { id } = req.params;
   try {
-    const queryResult = await connection.query(
-      `SELECT * FROM customers
-    WHERE  id=$1`,
+    const { rows: customer } = await connection.query(
+      `SELECT
+        customers.id,
+        customers.name,
+        customers.phone,
+        customers.cpf,
+        customers.birthday,
+        COUNT(customers.id) AS "rentalsCount"
+      FROM customers
+        JOIN rentals ON customers.id=rentals."customerId"  
+      WHERE  customers.id=$1
+      GROUP BY
+        customers.id`,
       [id]
     );
 
-    const customer = queryResult.rows[0];
-
     if (!customer) return res.status(400).send('Id de cliente não existe.');
     else {
-      customer.birthday = dayjs(customer.birthday).format(dayjsFormat);
-
-      return res.send(customer);
+      formatDate(customer, 'birthday');
+      return res.send(customer[0]);
     }
-  } catch {
+  } catch (error) {
+    console.log(error);
     res.sendStatus(500);
   }
 }

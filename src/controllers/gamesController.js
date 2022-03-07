@@ -17,9 +17,11 @@ export async function readGames(req, res) {
         FROM games 
           JOIN  categories ON games."categoryId"=categories.id
           JOIN rentals ON games.id=rentals."gameId"
-          ${filterByName}
+        ${filterByName}
         GROUP BY
-          games.id, categories.name ${sqlQueryOptions}`
+          games.id, 
+          categories.name
+       ${sqlQueryOptions}`
     );
     res.send(queryResult.rows);
   } catch (error) {
