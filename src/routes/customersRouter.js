@@ -11,12 +11,12 @@ import {
   validateUpdateCustomer,
 } from '../middlewares/validateCustomerMiddlewares.js';
 import validateSchema from '../middlewares/validateSchemaMiddleware.js';
-import verifyUrlQuery from '../middlewares/verifyUrlQueryMiddleware.js';
+import pagination from '../middlewares/paginationMiddleware.js';
 import customerSchema from '../schemas/customerSchema.js';
 
 const customersRouter = Router();
 
-customersRouter.get('/customers', verifyUrlQuery, readCustomers);
+customersRouter.get('/customers', pagination, readCustomers);
 customersRouter.get('/customers/:id', validateCustomerId, readCustomerById);
 
 customersRouter.post(

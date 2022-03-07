@@ -2,12 +2,12 @@ import { Router } from 'express';
 import { createGame, readGames } from '../controllers/gamesController.js';
 import validateCreateGame from '../middlewares/validateGameMiddleware.js';
 import validateSchema from '../middlewares/validateSchemaMiddleware.js';
-import verifyUrlQuery from '../middlewares/verifyUrlQueryMiddleware.js';
+import pagination from '../middlewares/paginationMiddleware.js';
 import gameSchema from '../schemas/gameSchema.js';
 
 const gamesRouter = Router();
 
-gamesRouter.get('/games', verifyUrlQuery, readGames);
+gamesRouter.get('/games', pagination, readGames);
 
 gamesRouter.post(
   '/games',
