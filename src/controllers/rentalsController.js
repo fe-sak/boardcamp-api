@@ -20,6 +20,10 @@ export async function readRentals(req, res) {
   } else if (status === 'closed') {
     sqlQueryFilterByStatus = `WHERE NOT rentals."returnDate" IS NULL`;
   }
+
+  let sqlQueryFilterByDate = '';
+  if (startDate) sqlQueryFilterByDate = `WHERE "rentDate">='${startDate}'`;
+
   const rentalsQuery = await connection.query(`
   SELECT 
     rentals.*,
@@ -31,8 +35,9 @@ export async function readRentals(req, res) {
     JOIN customers ON rentals."customerId"=customers.id
     JOIN games ON rentals."gameId"=games.id
     JOIN categories ON games."categoryId"=categories.id
-    ${sqlQueryFilterByStatus}
     ${sqlQueryFilterById}
+    ${sqlQueryFilterByStatus}
+    ${sqlQueryFilterByDate}
     ${sqlQueryOptions}`);
 
   const rentals = rentalsQuery.rows;
@@ -63,16 +68,39 @@ export async function readRentals(req, res) {
     };
   });
 
-  if (startDate) {
-    parsedRentals = parsedRentals.filter((rental) => {
-      const startDateDayjs = dayjs(startDate);
-      const rentDateDayjs = dayjs(rental.rentDate);
-      const difference = rentDateDayjs.diff(startDateDayjs, 'days');
-      if (difference >= 0) return true;
-    });
+  res.send(parsedRentals);
+}
+
+export async function readMetrics(req, res) {
+  const { startDate, endDate } = req.query;
+
+  let sqlQueryFilter = '';
+  if (startDate && endDate)
+    sqlQueryFilter = `WHERE "rentDate" BETWEEN '${startDate}' AND '${endDate}'`;
+  else {
+    if (startDate) sqlQueryFilter = `WHERE "rentDate">='${startDate}'`;
+    else if (endDate) sqlQueryFilter = `WHERE "rentDate"<='${endDate}'`;
   }
 
-  res.send(parsedRentals);
+  try {
+    const queryResult = await connection.query(
+      `SELECT  
+        COUNT(*) AS "rentals", 
+        SUM("originalPrice") AS "originalPriceTotal", 
+        SUM("delayFee") AS "delayFeeTotal" 
+      FROM rentals ${sqlQueryFilter} `
+    );
+    const { rentals, originalPriceTotal, delayFeeTotal } = queryResult.rows[0];
+
+    const revenue = originalPriceTotal + delayFeeTotal;
+    const average = parseInt(revenue / rentals);
+
+    const metrics = { revenue, rentals, average };
+
+    res.send(metrics);
+  } catch {
+    return res.sendStatus(500);
+  }
 }
 
 export async function createRental(req, res) {
