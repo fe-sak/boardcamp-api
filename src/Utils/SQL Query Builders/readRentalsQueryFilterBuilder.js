@@ -4,40 +4,17 @@ export default function readRentalsQueryFilterBuilder(
   status,
   startDate
 ) {
-  let sqlQueryFilterById = '';
-  if (customerId) {
-    sqlQueryFilterById = `rentals."customerId"=${customerId}`;
-  }
-  if (gameId) {
-    sqlQueryFilterById = `rentals."gameId"=${gameId}`;
-  }
+  const sqlQueryFilter = [];
+  if (customerId) sqlQueryFilter.push(`rentals."customerId"=${customerId}`);
 
-  let sqlQueryFilterByStatus = '';
-  if (status === 'open') {
-    sqlQueryFilterByStatus = `rentals."returnDate" IS NULL`;
-  } else if (status === 'closed') {
-    sqlQueryFilterByStatus = `NOT rentals."returnDate" IS NULL`;
-  }
+  if (gameId) sqlQueryFilter.push(`rentals."gameId"=${gameId}`);
 
-  let sqlQueryFilterByDate = '';
-  if (startDate) sqlQueryFilterByDate = `"rentDate">='${startDate}'`;
+  if (status === 'open') sqlQueryFilter.push(`rentals."returnDate" IS NULL`);
+  if (status === 'closed')
+    sqlQueryFilter.push(`NOT rentals."returnDate" IS NULL`);
 
-  let sqlQueryFilter = `
-    ${
-      sqlQueryFilterById || sqlQueryFilterByStatus || sqlQueryFilterByDate
-        ? 'WHERE'
-        : ''
-    } 
-      ${sqlQueryFilterById} 
-      ${sqlQueryFilterById && sqlQueryFilterByStatus ? 'AND' : ''}
-      ${sqlQueryFilterByStatus}
-      ${sqlQueryFilterByStatus && sqlQueryFilterByDate ? 'AND' : ''}
-      ${
-        sqlQueryFilterById && sqlQueryFilterByDate && !sqlQueryFilterByStatus
-          ? 'AND'
-          : ''
-      }
-      ${sqlQueryFilterByDate}`;
+  if (startDate) sqlQueryFilter.push(`"rentDate">='${startDate}'`);
 
-  return sqlQueryFilter;
+  if (sqlQueryFilter.length > 0) return `WHERE ${sqlQueryFilter.join(' AND ')}`;
+  else return '';
 }

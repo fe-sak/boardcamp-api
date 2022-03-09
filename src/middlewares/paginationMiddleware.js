@@ -1,22 +1,20 @@
 export default async function pagination(req, res, next) {
   const { offset, limit, order, desc } = req.query;
-  let sqlQueryString = '';
+  let sqlQuery = [];
 
   if (order) {
-    sqlQueryString += `ORDER BY "${order}" `;
+    sqlQuery.push(`ORDER BY "${order}"`);
 
     if (desc === 'true') {
-      sqlQueryString += `DESC `;
+      sqlQuery.push(`DESC`);
     }
   }
 
-  if (offset) {
-    sqlQueryString += `OFFSET ${offset} `;
-  }
+  if (offset) sqlQuery.push(`OFFSET ${offset}`);
 
-  if (limit) {
-    sqlQueryString += `LIMIT ${limit} `;
-  }
-  res.locals.sqlQueryOptions = sqlQueryString;
+  if (limit) sqlQuery.push(`LIMIT ${limit}`);
+
+  if (sqlQuery.length > 0) res.locals.sqlQueryOptions = `${sqlQuery.join(' ')}`;
+  else res.locals.sqlQueryOptions = '';
   next();
 }
