@@ -4,6 +4,7 @@ import dayjsFormat from '../Utils/dayjs/dayjsFormat.js';
 import formatDate from '../Utils/dayjs/formatDate.js';
 import readMetricsQueryFilterBuilder from '../Utils/SQL Query Builders/readMetricsQueryFilterBuilder.js';
 import readRentalsQueryFilterBuilder from '../Utils/SQL Query Builders/readRentalsQueryFilterBuilder.js';
+import treatMetricsData from '../Utils/treatMetricsData.js';
 
 export async function readRentals(req, res) {
   const { customerId, gameId, status, startDate } = req.query;
@@ -83,15 +84,11 @@ export async function readMetrics(req, res) {
     const { rentalsRaw, originalPriceTotalRaw, delayFeeTotalRaw } =
       metricsRaw[0];
 
-    const rentals = parseInt(rentalsRaw);
-    const originalPriceTotal = parseInt(originalPriceTotalRaw);
-    const delayFeeTotal =
-      delayFeeTotalRaw !== null ? parseInt(delayFeeTotalRaw) : 0;
-
-    const revenue = originalPriceTotal + delayFeeTotal;
-    const average = parseInt(revenue / rentals);
-
-    const metrics = { revenue, rentals, average };
+    const metrics = treatMetricsData(
+      rentalsRaw,
+      originalPriceTotalRaw,
+      delayFeeTotalRaw
+    );
 
     res.send(metrics);
   } catch {
