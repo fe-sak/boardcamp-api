@@ -1,13 +1,12 @@
 import Joi from 'joi';
-import imageUriPattern from '../Utils/Regular Expressions/imageUriRegEx.js';
-import numericalStringRegEx from '../Utils/Regular Expressions/numericalStringRegEx.js';
+import regExes from '../Utils/regExes.js';
 
 const gameSchema = Joi.object({
   name: Joi.string().required(),
-  image: Joi.string().pattern(imageUriPattern).required(),
-  stockTotal: Joi.string().pattern(numericalStringRegEx).required(),
+  image: Joi.string().pattern(regExes.imageUri).required(),
+  stockTotal: Joi.string().pattern(regExes.numericalString).required(),
   categoryId: Joi.number().required(),
-  pricePerDay: Joi.string().pattern(numericalStringRegEx).required(),
+  pricePerDay: Joi.string().pattern(regExes.numericalString).required(),
 });
 
 export default gameSchema;
