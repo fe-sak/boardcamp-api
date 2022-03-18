@@ -2,8 +2,8 @@ import dayjs from 'dayjs';
 import connection from '../database.js';
 import dayjsFormat from '../Utils/dayjs/dayjsFormat.js';
 import formatDate from '../Utils/dayjs/formatDate.js';
-import readMetricsQueryFilterBuilder from '../Utils/SQL Query Builders/readMetricsQueryFilterBuilder.js';
-import readRentalsQueryFilterBuilder from '../Utils/SQL Query Builders/readRentalsQueryFilterBuilder.js';
+import readMetricsQueryFilterBuilder from '../Utils/sqlQueryBuilder/readMetricsQueryFilterBuilder.js';
+import readRentalsQueryFilterBuilder from '../Utils/sqlQueryBuilder/readRentalsQueryFilterBuilder.js';
 import treatMetricsData from '../Utils/treatMetricsData.js';
 
 export async function readRentals(req, res) {
